@@ -4,6 +4,7 @@ import {
   hatchDigipet,
   trainDigipet,
   walkDigipet,
+  ignoreDigipet,
 } from "./digipet/controller";
 import { INITIAL_DIGIPET, setDigipet } from "./digipet/model";
 import app from "./server";
@@ -114,7 +115,7 @@ describe("action routes", () => {
     }
   });
 
-  describe.skip("GET /digipet/feed", () => {
+  describe("GET /digipet/feed", () => {
     test("if the user has a digipet, it calls the feedDigipet controller and responds with a message about feeding the digipet", async () => {
       // setup: reset digipet
       setDigipet(INITIAL_DIGIPET);
@@ -129,7 +130,7 @@ describe("action routes", () => {
       expect(response.body.digipet).toHaveProperty("nutrition");
       expect(response.body.digipet).toHaveProperty("discipline");
     });
-
+    // checks if functions is run
     it("delegates state change to the feedDigipet function", async () => {
       // setup: reset digipet and mock function
       setDigipet(INITIAL_DIGIPET);
@@ -144,7 +145,7 @@ describe("action routes", () => {
     });
   });
 
-  describe.skip("GET /digipet/train", () => {
+  describe("GET /digipet/train", () => {
     test("if the user has a digipet, it calls the trainDigipet controller and responds with a message about training the digipet", async () => {
       // setup: reset digipet
       setDigipet(INITIAL_DIGIPET);
@@ -202,5 +203,36 @@ describe("action routes", () => {
       // assert
       expect(walkDigipet).toHaveBeenCalledTimes(1);
     });
+  });
+});
+
+describe("GET /digipet/ignore", () => {
+  test("if the user has a digipet, it calls the ignoreDigipet controller and responds with a message about ignoring the digipet", async () => {
+    // setup: reset digipet
+    setDigipet(INITIAL_DIGIPET);
+
+    const response = await supertest(app).get("/digipet/ignore");
+
+    // response includes a relevant message
+    expect(response.body.message).toMatch(/ignore/i);
+
+    // response includes digipet data
+    expect(response.body.digipet).toHaveProperty("happiness");
+    expect(response.body.digipet).toHaveProperty("nutrition");
+    expect(response.body.digipet).toHaveProperty("discipline");
+  });
+
+  //don't understand this bit of the test
+  it("delegates state change to the ignoreDigipet function", async () => {
+    // setup: reset digipet and mock function
+    setDigipet(INITIAL_DIGIPET);
+
+    if (jest.isMockFunction(ignoreDigipet) /* type guard */) {
+      ignoreDigipet.mockReset();
+    }
+    // act
+    await supertest(app).get("/digipet/ignore");
+    // assert
+    expect(ignoreDigipet).toHaveBeenCalledTimes(1);
   });
 });
