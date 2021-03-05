@@ -29,6 +29,21 @@ export function hatchDigipet(): Digipet {
   }
 }
 
+export function rehomeDigipet(): undefined {
+  //if digipet does not exist throw error message
+  if (getDigipet()) {
+    //delete current digipet
+    // spread to avoid accidental mutation
+    const newDigipet = undefined;
+    setDigipet(newDigipet);
+    return newDigipet;
+
+  } else {
+
+    throw new Error("Can't rehome a digipet when you don't have one!");
+  }
+}
+
 export function trainDigipet(): void {
   updateDigipetBounded("discipline", 10);
   updateDigipetBounded("happiness", -5);
@@ -45,8 +60,4 @@ export function ignoreDigipet(): void {
   updateDigipetBounded("nutrition", -10);
 }
 
-export function ignoreDigipet(): void {
-  updateDigipetBounded("discipline", -10);
-  updateDigipetBounded("happiness", -10);
-  updateDigipetBounded("nutrition", -10);
-}
+
