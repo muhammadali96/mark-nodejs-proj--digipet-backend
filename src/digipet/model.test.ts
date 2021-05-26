@@ -177,3 +177,4 @@ describe("setDigipet", () => {
     expect(getDigipet()).not.toBe(sampleDigipet);
   });
 });
+
